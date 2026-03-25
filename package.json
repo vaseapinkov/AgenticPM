@@ -1,0 +1,20 @@
+{
+  "name": "agent-board",
+  "version": "2.0.0",
+  "description": "Local AI agent kanban board — per-repo, scoped to your project",
+  "main": "lib/server.js",
+  "bin": {
+    "agent-board": "./bin/agent-board.js"
+  },
+  "scripts": {
+    "start": "node bin/agent-board.js start",
+    "postinstall": "npx playwright install chromium --with-deps 2>/dev/null || true"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "uuid": "^9.0.0",
+    "playwright": "^1.40.0"
+  },
+  "license": "MIT"
+}

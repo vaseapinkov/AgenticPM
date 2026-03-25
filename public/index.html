@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Board — __REPO_NAME__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Themes ─────────────────────────────────────────────────────── */
+:root {
+  --radius: 6px;
+  --radius-lg: 10px;
+  --transition: 150ms ease;
+}
+
+[data-theme="dark"], [data-theme="system"].dark-os {
+  --bg:        #0f0f10;
+  --bg2:       #141415;
+  --bg3:       #1a1a1c;
+  --bg4:       #222224;
+  --border:    #2a2a2d;
+  --border2:   #363639;
+  --text:      #ececed;
+  --text2:     #a0a0a8;
+  --text3:     #60606a;
+  --text4:     #3a3a40;
+  --accent:    #5e6ad2;
+  --accent-bg: rgba(94,106,210,.12);
+  --accent-t:  #7b84e0;
+  --green:     #4cb782;
+  --green-bg:  rgba(76,183,130,.1);
+  --amber:     #f0a429;
+  --amber-bg:  rgba(240,164,41,.1);
+  --violet:    #8b5cf6;
+  --violet-bg: rgba(139,92,246,.1);
+  --red:       #eb5757;
+  --red-bg:    rgba(235,87,87,.1);
+  --shadow:    0 1px 3px rgba(0,0,0,.5), 0 4px 12px rgba(0,0,0,.3);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,.5);
+}
+
+[data-theme="light"], [data-theme="system"].light-os {
+  --bg:        #ffffff;
+  --bg2:       #f7f7f8;
+  --bg3:       #efeff1;
+  --bg4:       #e8e8eb;
+  --border:    #e0e0e4;
+  --border2:   #d0d0d5;
+  --text:      #1a1a1f;
+  --text2:     #5c5c6e;
+  --text3:     #9898a8;
+  --text4:     #c8c8d4;
+  --accent:    #5e6ad2;
+  --accent-bg: rgba(94,106,210,.08);
+  --accent-t:  #4a55c0;
+  --green:     #38a169;
+  --green-bg:  rgba(56,161,105,.08);
+  --amber:     #d97706;
+  --amber-bg:  rgba(217,119,6,.08);
+  --violet:    #7c3aed;
+  --violet-bg: rgba(124,58,237,.08);
+  --red:       #dc2626;
+  --red-bg:    rgba(220,38,38,.08);
+  --shadow:    0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,.12);
+}
+
+/* ── Base ────────────────────────────────────────────────────────── */
+html { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────── */
+.layout { display: flex; flex: 1; overflow: hidden; }
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.sidebar-logo {
+  padding: 14px 16px 12px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-logo-mark {
+  width: 22px; height: 22px;
+  background: var(--accent);
+  border-radius: 5px;
+  display: grid; place-items: center;
+  font-size: 11px; color: #fff;
+  font-weight: 700; flex-shrink: 0;
+}
+
+.sidebar-logo-name {
+  font-weight: 600; font-size: 13px;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.sidebar-repo {
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+}
+
+.sidebar-repo-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 2px var(--green-bg);
+  flex-shrink: 0;
+  transition: background var(--transition);
+}
+.sidebar-repo-dot.offline { background: var(--text4); box-shadow: none; }
+
+.sidebar-repo-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-section {
+  padding: 4px 8px;
+  flex: 1;
+}
+
+.sidebar-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 6px 8px 4px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--transition);
+  gap: 8px;
+  text-decoration: none;
+}
+.sidebar-item:hover { background: var(--bg3); }
+.sidebar-item.active { background: var(--bg4); }
+
+.sidebar-item-left {
+  display: flex; align-items: center; gap: 8px;
+  min-width: 0;
+}
+
+.sidebar-item-icon { font-size: 13px; flex-shrink: 0; }
+
+.sidebar-item-label {
+  font-size: 12.5px;
+  color: var(--text2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-item.active .sidebar-item-label { color: var(--text); font-weight: 500; }
+
+.sidebar-badge {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text3);
+  background: var(--bg4);
+  border-radius: 10px;
+  padding: 1px 6px;
+  min-width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar-bottom {
+  padding: 10px 8px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 4px;
+}
+
+.theme-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 8px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text2);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: inherit;
+}
+.theme-btn:hover { background: var(--bg4); color: var(--text); }
+.theme-btn.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent-t); }
+
+/* ── Main board area ─────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ── Topbar ──────────────────────────────────────────────────────── */
+.topbar {
+  height: 48px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 12px;
+  flex-shrink: 0;
+  background: var(--bg);
+}
+
+.topbar-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.topbar-sep { flex: 1; }
+
+.btn-primary {
+  height: 30px;
+  padding: 0 14px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity var(--transition), transform 80ms;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+.btn-primary:hover { opacity: 0.88; }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-secondary {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border2);
+  background: var(--bg2);
+  color: var(--text2);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.btn-secondary:hover { border-color: var(--text4); }
+
+/* ── Add Task Modal ─────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.4);
+  backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+  opacity: 0; pointer-events: none;
+  transition: opacity .15s ease;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  width: 480px;
+  max-width: 92vw;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(10px) scale(.98);
+  transition: transform .15s ease;
+}
+.modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-title { font-size: 14px; font-weight: 600; color: var(--text1); }
+
+.modal-body { padding: 16px 18px; }
+.modal-label {
+  display: block;
+  font-size: 11px; font-weight: 500;
+  color: var(--text3);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.modal-input {
+  width: 100%; box-sizing: border-box;
+  height: 34px; padding: 0 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border2);
+  background: var(--bg1);
+  color: var(--text1);
+  font-size: 13px;
+  margin-bottom: 14px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.modal-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+.modal-input::placeholder { color: var(--text4); }
+
+.modal-textarea {
+  width: 100%; box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border2);
+  background: var(--bg1);
+  color: var(--text1);
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 100px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.modal-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+.modal-textarea::placeholder { color: var(--text4); }
+
+.modal-foot {
+  display: flex; justify-content: flex-end; gap: 8px;
+  padding: 12px 18px 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Board columns ───────────────────────────────────────────────── */
+.board-wrap {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 16px 20px 20px;
+}
+
+.board {
+  display: flex;
+  gap: 10px;
+  height: 100%;
+  min-width: 900px;
+}
+
+.col {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.col-head {
+  padding: 10px 12px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.col-pip {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.col-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+  flex: 1;
+  letter-spacing: -0.01em;
+}
+
+.col-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text3);
+  background: var(--bg3);
+  border-radius: 10px;
+  padding: 1px 7px;
+}
+
+/* Column accent colors */
+.col[data-col="backlog"]  .col-pip { background: var(--text3); }
+.col[data-col="todo"]     .col-pip { background: var(--accent); box-shadow: 0 0 0 2px var(--accent-bg); }
+.col[data-col="todo"]     .col-name { color: var(--accent-t); }
+.col[data-col="doing"]    .col-pip { background: var(--amber); box-shadow: 0 0 0 2px var(--amber-bg); animation: pip-pulse 1.6s ease-in-out infinite; }
+.col[data-col="doing"]    .col-name { color: var(--amber); }
+.col[data-col="checking"] .col-pip { background: var(--violet); box-shadow: 0 0 0 2px var(--violet-bg); animation: pip-pulse 1.6s ease-in-out infinite; }
+.col[data-col="checking"] .col-name { color: var(--violet); }
+.col[data-col="done"]     .col-pip { background: var(--green); box-shadow: 0 0 0 2px var(--green-bg); }
+.col[data-col="done"]     .col-name { color: var(--green); }
+
+@keyframes pip-pulse { 0%,100% { opacity:1 } 50% { opacity:.35 } }
+
+.col-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.col-body::-webkit-scrollbar { width: 3px; }
+.col-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ── Cards ───────────────────────────────────────────────────────── */
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 11px;
+  cursor: pointer;
+  transition: border-color var(--transition), box-shadow var(--transition), transform 120ms;
+  position: relative;
+  animation: card-appear 0.2s ease;
+}
+@keyframes card-appear { from { opacity:0; transform:translateY(4px) } to { opacity:1; transform:none } }
+
+.card:hover {
+  border-color: var(--border2);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+.card-title {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.card-desc {
+  font-size: 11.5px;
+  color: var(--text3);
+  line-height: 1.45;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.card-time {
+  font-size: 11px;
+  color: var(--text4);
+}
+
+.card-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Status badges */
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 4px;
+  padding: 2px 6px;
+  text-transform: uppercase;
+}
+.badge-doing    { background: var(--amber-bg);  color: var(--amber); }
+.badge-checking { background: var(--violet-bg); color: var(--violet); }
+.badge-done     { background: var(--green-bg);  color: var(--green); }
+.badge-failed   { background: var(--red-bg);    color: var(--red); }
+
+/* Screenshot thumb on card */
+.card-shot-thumb {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 7px;
+}
+.card-shot-thumb img {
+  width: 48px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  opacity: 0.85;
+  transition: opacity var(--transition);
+}
+.card-shot-thumb img:hover { opacity: 1; }
+
+/* Inline action buttons */
+.cbtn {
+  height: 22px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: inherit;
+  border-radius: 4px;
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.cbtn:hover { background: var(--bg4); color: var(--text); }
+.cbtn.run   { border-color: var(--accent); color: var(--accent-t); background: var(--accent-bg); }
+.cbtn.retry { border-color: var(--amber);  color: var(--amber); background: var(--amber-bg); }
+.cbtn.del   { border-color: transparent; color: var(--text4); background: transparent; }
+.cbtn.del:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+
+/* Active progress bar */
+.card-progress {
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.card-progress-fill {
+  height: 100%;
+  border-radius: 1px;
+  animation: progress-sweep 1.8s ease-in-out infinite;
+}
+.card-progress-fill.amber  { background: var(--amber); }
+.card-progress-fill.violet { background: var(--violet); }
+@keyframes progress-sweep {
+  0%   { transform: translateX(-100%); width: 40%; }
+  60%  { transform: translateX(200%);  width: 55%; }
+  100% { transform: translateX(-100%); width: 40%; }
+}
+
+.col-empty {
+  padding: 20px 12px;
+  text-align: center;
+  color: var(--text4);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+/* ── Drag & Drop ────────────────────────────────────────────────── */
+.card.dragging { opacity: .4; }
+.col-body.drag-over {
+  background: var(--accent-bg);
+  border-radius: var(--radius);
+  outline: 2px dashed var(--accent);
+  outline-offset: -2px;
+}
+
+/* ── Drawer ──────────────────────────────────────────────────────── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.3);
+  z-index: 100;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+  backdrop-filter: blur(2px);
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+
+.drawer {
+  position: fixed; right: 0; top: 0; bottom: 0;
+  width: 560px;
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+  z-index: 101;
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.25s cubic-bezier(0.16,1,0.3,1);
+  box-shadow: var(--shadow-lg);
+}
+.drawer.open { transform: translateX(0); }
+
+.drawer-head {
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 12px;
+  flex-shrink: 0;
+}
+
+.drawer-head-info { flex: 1; min-width: 0; }
+
+.drawer-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.drawer-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.drawer-meta-item {
+  font-size: 11px;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.drawer-close {
+  width: 26px; height: 26px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text3);
+  display: grid; place-items: center;
+  cursor: pointer; font-size: 16px; flex-shrink: 0;
+  transition: all var(--transition);
+}
+.drawer-close:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+
+/* Drawer tabs */
+.drawer-tabs {
+  display: flex;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 0;
+}
+
+.drawer-tab {
+  padding: 9px 14px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color var(--transition), border-color var(--transition);
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.drawer-tab:hover { color: var(--text2); }
+.drawer-tab.active { color: var(--accent-t); border-bottom-color: var(--accent); }
+
+.drawer-tab-badge {
+  font-size: 10px;
+  background: var(--green-bg);
+  color: var(--green);
+  border-radius: 10px;
+  padding: 1px 5px;
+  font-weight: 600;
+}
+
+/* Tab panels */
+.drawer-panel { display: none; flex: 1; overflow: hidden; flex-direction: column; }
+.drawer-panel.active { display: flex; }
+
+/* Log panel */
+.drawer-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 18px;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--text3);
+}
+.drawer-log::-webkit-scrollbar { width: 3px; }
+.drawer-log::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.log-line { display: block; }
+.log-line.kiro   { color: var(--amber); }
+.log-line.review { color: var(--violet); }
+.log-line.shot   { color: var(--accent-t); }
+.log-line.ok     { color: var(--green); }
+.log-line.err    { color: var(--red); }
+.log-line.warn   { color: var(--amber); opacity: 0.8; }
+.log-line.sys    { color: var(--text3); }
+.log-empty       { color: var(--text4); font-size: 12px; padding: 20px; text-align: center; }
+
+/* Review panel */
+.drawer-review-panel {
+  padding: 16px 18px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.review-result {
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  font-weight: 500;
+  border: 1px solid;
+}
+.review-result.ok  { background: var(--green-bg); border-color: rgba(76,183,130,.25); color: var(--green); }
+.review-result.bad { background: var(--red-bg); border-color: rgba(235,87,87,.25); color: var(--red); }
+
+/* Screenshots panel */
+.drawer-shots-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.shot-group { }
+
+.shot-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shot-label .shot-dim {
+  font-weight: 400;
+  color: var(--text4);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.shot-img-wrap {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  position: relative;
+  cursor: zoom-in;
+}
+
+.shot-img-wrap img {
+  width: 100%;
+  display: block;
+  transition: opacity var(--transition);
+}
+.shot-img-wrap:hover img { opacity: 0.92; }
+
+.shot-timestamp {
+  font-size: 10.5px;
+  color: var(--text4);
+  margin-top: 5px;
+}
+
+.shot-empty {
+  padding: 30px 20px;
+  text-align: center;
+  color: var(--text4);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.shot-empty strong { display: block; color: var(--text3); margin-bottom: 4px; font-size: 13px; }
+
+/* Lightbox */
+.lightbox {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.85);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  cursor: zoom-out;
+}
+.lightbox.open { display: flex; }
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+
+/* ── Settings panel ─────────────────────────────────────────────── */
+.sidebar-settings {
+  padding: 8px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.settings-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 6px 8px 4px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  gap: 8px;
+}
+
+.settings-row-label {
+  font-size: 12px;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.settings-row-label span { font-size: 13px; }
+
+/* Segmented control */
+.seg {
+  display: flex;
+  gap: 2px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 2px;
+}
+
+.seg-btn {
+  font-size: 10.5px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text3);
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.seg-btn:hover { color: var(--text2); }
+.seg-btn.active {
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+.seg-btn.active.kiro   { color: var(--amber); }
+.seg-btn.active.claude { color: var(--accent-t); }
+
+/* Toggle switch */
+.toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.toggle {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.toggle input:checked + .toggle-track {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--text3);
+  transition: transform var(--transition), background var(--transition);
+}
+
+.toggle input:checked + .toggle-track::after {
+  transform: translateX(14px);
+  background: #fff;
+}
+
+.toggle-label {
+  font-size: 11px;
+  color: var(--text3);
+}
+
+/* ── Toast ───────────────────────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 20px; left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  font-size: 12.5px;
+  color: var(--text);
+  z-index: 300;
+  transition: transform 0.22s cubic-bezier(0.16,1,0.3,1);
+  pointer-events: none;
+  box-shadow: var(--shadow);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">⚡</div>
+      <div class="sidebar-logo-name">Agent Board</div>
+    </div>
+
+    <div class="sidebar-repo">
+      <div class="sidebar-repo-dot" id="connDot"></div>
+      <div class="sidebar-repo-name" title="__REPO_NAME__">__REPO_NAME__</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Board</div>
+
+      <div class="sidebar-item active">
+        <div class="sidebar-item-left">
+          <span class="sidebar-item-icon">☰</span>
+          <span class="sidebar-item-label">All tasks</span>
+        </div>
+        <span class="sidebar-badge" id="totalCount">0</span>
+      </div>
+
+      <div class="sidebar-item" onclick="scrollToCol('doing')">
+        <div class="sidebar-item-left">
+          <span class="sidebar-item-icon" style="color:var(--amber)">⚙</span>
+          <span class="sidebar-item-label">In progress</span>
+        </div>
+        <span class="sidebar-badge" id="count-doing-nav">0</span>
+      </div>
+
+      <div class="sidebar-item" onclick="scrollToCol('checking')">
+        <div class="sidebar-item-left">
+          <span class="sidebar-item-icon" style="color:var(--violet)">◎</span>
+          <span class="sidebar-item-label">Checking</span>
+        </div>
+        <span class="sidebar-badge" id="count-checking-nav">0</span>
+      </div>
+
+      <div class="sidebar-item" onclick="scrollToCol('done')">
+        <div class="sidebar-item-left">
+          <span class="sidebar-item-icon" style="color:var(--green)">✓</span>
+          <span class="sidebar-item-label">Done</span>
+        </div>
+        <span class="sidebar-badge" id="count-done-nav">0</span>
+      </div>
+    </div>
+
+    <!-- Settings panel -->
+    <div class="sidebar-settings">
+      <div class="settings-section-label">Settings</div>
+
+      <div class="settings-row">
+        <div class="settings-row-label"><span>⚡</span> Executor</div>
+        <div class="seg" id="seg-executor">
+          <button class="seg-btn kiro active" onclick="setSetting('executor','kiro')">Kiro</button>
+          <button class="seg-btn claude" onclick="setSetting('executor','claude')">Claude</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label"><span>🔍</span> Reviewer</div>
+        <div class="seg" id="seg-reviewer">
+          <button class="seg-btn kiro active" onclick="setSetting('reviewer','kiro')">Kiro</button>
+          <button class="seg-btn claude" onclick="setSetting('reviewer','claude')">Claude</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label"><span>↺</span> Retries</div>
+        <div class="seg" id="seg-retries">
+          <button class="seg-btn active" onclick="setSetting('maxRetries',3)">3×</button>
+          <button class="seg-btn" onclick="setSetting('maxRetries',0)">∞</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label"><span>🔀</span> Auto PR</div>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-autocommit" checked onchange="setSetting('autoCommit', this.checked)" />
+          <div class="toggle-track"></div>
+        </label>
+      </div>
+
+      <div class="settings-row" style="flex-direction:column;align-items:flex-start;gap:4px">
+        <div class="settings-row-label"><span>🔑</span> GH Token <span style="font-size:10px;color:var(--text4)">(optional)</span></div>
+        <input type="password" id="gh-token-input" placeholder="ghp_xxxx (for PR API)" autocomplete="off"
+          style="width:100%;height:24px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:0 8px;color:var(--text);font-size:11px;font-family:inherit;outline:none"
+          onchange="setSetting('githubToken', this.value)"
+          onfocus="this.style.borderColor='var(--accent)'"
+          onblur="this.style.borderColor='var(--border)'" />
+        <div style="font-size:10px;color:var(--text4);padding:0 2px">Only needed if <code style="font-size:10px">gh</code> CLI isn't installed</div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label"><span>📸</span> Screenshots</div>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-screenshots" checked onchange="setSetting('screenshots', this.checked)" />
+          <div class="toggle-track"></div>
+        </label>
+      </div>
+    </div>
+
+    <div class="sidebar-bottom">
+      <button class="theme-btn" id="btn-dark"   onclick="setTheme('dark')" title="Dark">🌙</button>
+      <button class="theme-btn" id="btn-light"  onclick="setTheme('light')" title="Light">☀️</button>
+      <button class="theme-btn active" id="btn-system" onclick="setTheme('system')" title="System">💻</button>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+      <span class="topbar-title">Board</span>
+      <div class="topbar-sep"></div>
+      <button class="btn-primary" onclick="openAddModal()">+ New task</button>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div class="modal-overlay" id="addModalOverlay" onclick="closeAddModal()">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-head">
+          <span class="modal-title">New task</span>
+          <button class="drawer-close" onclick="closeAddModal()" aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body">
+          <label class="modal-label" for="addTitle">Title</label>
+          <input class="modal-input" id="addTitle" type="text" placeholder="What needs to be done?" maxlength="200" />
+          <label class="modal-label" for="addDesc">Description</label>
+          <textarea class="modal-textarea" id="addDesc" placeholder="Add details, acceptance criteria, links…" maxlength="2000" rows="6"></textarea>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-secondary" onclick="closeAddModal()">Cancel</button>
+          <button class="btn-primary" onclick="addTask()">Add task</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Board -->
+    <div class="board-wrap">
+      <div class="board">
+        <div class="col" data-col="backlog" id="col-backlog">
+          <div class="col-head">
+            <div class="col-pip"></div>
+            <div class="col-name">Backlog</div>
+            <div class="col-count" id="count-backlog">0</div>
+          </div>
+          <div class="col-body" id="cards-backlog"></div>
+        </div>
+
+        <div class="col" data-col="todo" id="col-todo">
+          <div class="col-head">
+            <div class="col-pip"></div>
+            <div class="col-name">Todo</div>
+            <div class="col-count" id="count-todo">0</div>
+          </div>
+          <div class="col-body" id="cards-todo"></div>
+        </div>
+
+        <div class="col" data-col="doing" id="col-doing">
+          <div class="col-head">
+            <div class="col-pip"></div>
+            <div class="col-name">Doing</div>
+            <div class="col-count" id="count-doing">0</div>
+          </div>
+          <div class="col-body" id="cards-doing"></div>
+        </div>
+
+        <div class="col" data-col="checking" id="col-checking">
+          <div class="col-head">
+            <div class="col-pip"></div>
+            <div class="col-name">Checking</div>
+            <div class="col-count" id="count-checking">0</div>
+          </div>
+          <div class="col-body" id="cards-checking"></div>
+        </div>
+
+        <div class="col" data-col="done" id="col-done">
+          <div class="col-head">
+            <div class="col-pip"></div>
+            <div class="col-name">Done</div>
+            <div class="col-count" id="count-done">0</div>
+          </div>
+          <div class="col-body" id="cards-done"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Drawer -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-head-info">
+      <div class="drawer-title" id="dTitle">—</div>
+      <div class="drawer-meta" id="dMeta"></div>
+    </div>
+    <div class="drawer-close" onclick="closeDrawer()">×</div>
+  </div>
+
+  <div class="drawer-tabs">
+    <div class="drawer-tab active" data-tab="log" onclick="switchTab('log')">Log</div>
+    <div class="drawer-tab" data-tab="screenshots" onclick="switchTab('screenshots')">
+      Screenshots
+      <span class="drawer-tab-badge" id="shotBadge" style="display:none">0</span>
+    </div>
+    <div class="drawer-tab" data-tab="review" onclick="switchTab('review')" id="reviewTab" style="display:none">Review</div>
+  </div>
+
+  <div class="drawer-panel active" data-panel="log">
+    <div class="drawer-log" id="dLog"></div>
+  </div>
+
+  <div class="drawer-panel" data-panel="screenshots">
+    <div class="drawer-shots-panel" id="dShots"></div>
+  </div>
+
+  <div class="drawer-panel" data-panel="review">
+    <div class="drawer-review-panel" id="dReview"></div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="" />
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!--__CONFIG__-->
+<script>
+const API = '__API_URL__';
+let tasks = [];
+let openId = null;
+let activeTab = 'log';
+
+const STATUS_COL = { backlog:'backlog', todo:'todo', doing:'doing', checking:'checking', done:'done', 'review-failed':'done', error:'done' };
+
+// ── Theme ────────────────────────────────────────────────────────
+const mq = window.matchMedia('(prefers-color-scheme: dark)');
+
+function applyTheme(t) {
+  const html = document.documentElement;
+  html.dataset.theme = t;
+  if (t === 'system') {
+    html.classList.toggle('dark-os',  mq.matches);
+    html.classList.toggle('light-os', !mq.matches);
+  } else {
+    html.classList.remove('dark-os', 'light-os');
+  }
+  ['dark','light','system'].forEach(id => {
+    document.getElementById(`btn-${id}`)?.classList.toggle('active', id === t);
+  });
+  localStorage.setItem('ab-theme', t);
+}
+
+function setTheme(t) { applyTheme(t); }
+mq.addEventListener('change', () => { if (document.documentElement.dataset.theme === 'system') applyTheme('system'); });
+
+// Boot theme
+applyTheme(localStorage.getItem('ab-theme') || 'system');
+
+// ── SSE ──────────────────────────────────────────────────────────
+function sse() {
+  const es = new EventSource(`${API}/api/events`);
+  es.addEventListener('connected', () => {
+    document.getElementById('connDot').className = 'sidebar-repo-dot';
+    toast('Connected');
+  });
+  es.addEventListener('settings-updated', e => {
+    settings = JSON.parse(e.data);
+    applySettingsUI(settings);
+  });
+  es.addEventListener('task-created', e => { upsert(JSON.parse(e.data)); render(); });
+  es.addEventListener('task-updated', e => {
+    const t = JSON.parse(e.data); upsert(t); render();
+    if (openId === t.id) refreshDrawer(t);
+  });
+  es.addEventListener('task-deleted', e => {
+    const { id } = JSON.parse(e.data);
+    tasks = tasks.filter(t => t.id !== id); render();
+    if (openId === id) closeDrawer();
+  });
+  es.onerror = () => {
+    document.getElementById('connDot').className = 'sidebar-repo-dot offline';
+    es.close(); setTimeout(sse, 3000);
+  };
+}
+
+function upsert(t) {
+  const i = tasks.findIndex(x => x.id === t.id);
+  i >= 0 ? tasks[i] = t : tasks.push(t);
+}
+
+// ── Load ─────────────────────────────────────────────────────────
+async function boot() {
+  try {
+    tasks = await (await fetch(`${API}/api/tasks`)).json();
+    render(); sse(); initDragDrop();
+    await loadSettings();
+  } catch {
+    document.getElementById('connDot').className = 'sidebar-repo-dot offline';
+    toast('⚠ Server offline on port __PORT__');
+  }
+}
+
+function initDragDrop() {
+  const todoBody = document.getElementById('cards-todo');
+  todoBody.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; todoBody.classList.add('drag-over'); });
+  todoBody.addEventListener('dragleave', e => { if (!todoBody.contains(e.relatedTarget)) todoBody.classList.remove('drag-over'); });
+  todoBody.addEventListener('drop', async e => {
+    e.preventDefault();
+    todoBody.classList.remove('drag-over');
+    const taskId = e.dataTransfer.getData('text/plain');
+    if (!taskId) return;
+    const task = tasks.find(t => t.id === taskId);
+    if (!task || task.status !== 'backlog') return;
+    await fetch(`${API}/api/tasks/${taskId}`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'todo' })
+    });
+    toast('⚡ Agent triggered');
+  });
+}
+
+// ── Render ───────────────────────────────────────────────────────
+function render() {
+  const cols = ['backlog','todo','doing','checking','done'];
+  const buckets = {}; cols.forEach(c => { buckets[c] = []; });
+
+  tasks.slice().sort((a,b) => new Date(a.createdAt)-new Date(b.createdAt))
+    .forEach(t => (buckets[STATUS_COL[t.status]||'backlog']).push(t));
+
+  let total = 0;
+  cols.forEach(col => {
+    const body = document.getElementById(`cards-${col}`);
+    body.innerHTML = '';
+    const n = buckets[col].length;
+    total += n;
+    document.getElementById(`count-${col}`).textContent = n;
+    const nav = document.getElementById(`count-${col}-nav`);
+    if (nav) nav.textContent = n;
+    if (!n) { body.innerHTML = `<div class="col-empty">No tasks</div>`; return; }
+    buckets[col].forEach(t => body.appendChild(makeCard(t)));
+  });
+  document.getElementById('totalCount').textContent = total;
+}
+
+function makeCard(t) {
+  const div = document.createElement('div');
+  div.className = 'card'; div.dataset.id = t.id;
+
+  if (t.status === 'backlog') {
+    div.draggable = true;
+    div.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', t.id);
+      e.dataTransfer.effectAllowed = 'move';
+      div.classList.add('dragging');
+    });
+    div.addEventListener('dragend', () => div.classList.remove('dragging'));
+  }
+
+  const doing    = t.status === 'doing';
+  const checking = t.status === 'checking';
+  const failed   = t.status === 'review-failed';
+  const done     = t.status === 'done';
+  const shots    = t.screenshots || [];
+
+  const badge = doing    ? `<span class="badge badge-doing">running</span>`
+    : checking ? `<span class="badge badge-checking">reviewing</span>`
+    : failed   ? `<span class="badge badge-failed">failed</span>`
+    : done     ? `<span class="badge badge-done">done</span>` : '';
+
+  const btns = t.status === 'backlog'
+    ? `<button class="cbtn run" onclick="runTask(event,'${t.id}')">▶ Run</button>`
+    : failed ? `<button class="cbtn retry" onclick="runTask(event,'${t.id}')">↺ Retry</button>` : '';
+
+  const shotThumb = shots.length
+    ? `<div class="card-shot-thumb">${shots.map(s => `<img src="${API}${s.url}" title="${s.viewport}" onclick="openLightbox(event,'${API}${s.url}')">`).join('')}</div>`
+    : '';
+
+  const progress = (doing || checking)
+    ? `<div class="card-progress"><div class="card-progress-fill ${doing?'amber':'violet'}"></div></div>` : '';
+
+  const agentChip = (done || failed) && t.usedExecutor
+    ? `<span style="font-size:10px;color:var(--text4);margin-right:2px">${t.usedExecutor === 'claude' ? 'Claude' : 'Kiro'}→${t.usedReviewer === 'claude' ? 'Claude' : 'Kiro'}</span>`
+    : '';
+
+  const retryChip = t.retryCount > 0
+    ? `<span style="font-size:10px;color:var(--amber);background:var(--amber-bg);border-radius:3px;padding:1px 5px">↺${t.retryCount}</span>`
+    : '';
+
+  const prBtn = done && t.prUrl
+    ? `<a href="${t.prUrl}" target="_blank" onclick="event.stopPropagation()" class="cbtn" style="color:var(--green);border-color:rgba(76,183,130,.3);background:var(--green-bg);text-decoration:none">↗ PR</a>`
+    : done && !t.prUrl
+    ? `<button class="cbtn" style="color:var(--text3)" onclick="commitTask(event,'${t.id}')" title="Create commit + PR">⬆ PR</button>`
+    : '';
+
+  div.innerHTML = `
+    <div class="card-title">${esc(t.title)}</div>
+    ${t.description ? `<div class="card-desc">${esc(t.description)}</div>` : ''}
+    ${shotThumb}
+    <div class="card-foot">
+      <span class="card-time">${ago(t.createdAt)}</span>
+      <div class="card-right">
+        ${agentChip}${retryChip}
+        ${badge}
+        ${prBtn}
+        ${btns}
+        <button class="cbtn del" onclick="delTask(event,'${t.id}')">✕</button>
+      </div>
+    </div>
+    ${progress}
+  `;
+  div.addEventListener('click', e => {
+    if (e.target.classList.contains('cbtn') || e.target.tagName === 'IMG') return;
+    openDrawer(t.id);
+  });
+  return div;
+}
+
+// ── Actions ──────────────────────────────────────────────────────
+async function addTask() {
+  const title = document.getElementById('addTitle').value.trim();
+  if (!title) { document.getElementById('addTitle').focus(); return; }
+  const desc = document.getElementById('addDesc').value.trim();
+  await fetch(`${API}/api/tasks`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ title, description: desc })
+  });
+  closeAddModal();
+}
+
+function openAddModal() {
+  document.getElementById('addTitle').value = '';
+  document.getElementById('addDesc').value = '';
+  document.getElementById('addModalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('addTitle').focus(), 50);
+}
+
+function closeAddModal() {
+  document.getElementById('addModalOverlay').classList.remove('open');
+}
+
+async function runTask(e, id) {
+  e.stopPropagation();
+  await fetch(`${API}/api/tasks/${id}`, {
+    method:'PATCH', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ status: 'todo' })
+  });
+  toast('⚡ Agent triggered');
+}
+
+async function delTask(e, id) {
+  e.stopPropagation();
+  await fetch(`${API}/api/tasks/${id}`, { method:'DELETE' });
+}
+
+// ── Drawer ───────────────────────────────────────────────────────
+function openDrawer(id) {
+  openId = id;
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  refreshDrawer(t);
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+
+function refreshDrawer(t) {
+  if (openId !== t.id) return;
+  document.getElementById('dTitle').textContent = t.title;
+
+  // Meta
+  const metaEl = document.getElementById('dMeta');
+  const statusColor = { doing:'amber', checking:'violet', done:'green', 'review-failed':'red', backlog:'', todo:'accent' }[t.status] || '';
+  metaEl.innerHTML = `
+    <span class="drawer-meta-item" style="color:var(--${statusColor||'text3'})">${t.status}</span>
+    <span class="drawer-meta-item">· ${ago(t.createdAt)}</span>
+    ${t.doneAt ? `<span class="drawer-meta-item">· done ${ago(t.doneAt)}</span>` : ''}
+  `;
+
+  // Log
+  const logEl = document.getElementById('dLog');
+  if (!t.log?.trim()) {
+    logEl.innerHTML = `<div class="log-empty">No output yet.</div>`;
+  } else {
+    logEl.innerHTML = t.log.split('\n').filter(Boolean).map(l => {
+      const cls = l.includes('[Kiro Review]') ? 'review'
+        : l.includes('[Kiro]') ? 'kiro'
+        : l.includes('[Screenshots]') ? 'shot'
+        : (l.includes('✅') || l.includes('🎉') || l.includes('✓')) ? 'ok'
+        : (l.includes('ERROR') || l.includes('✗')) ? 'err'
+        : l.includes('⚠') ? 'warn' : 'sys';
+      return `<span class="log-line ${cls}">${esc(l)}</span>`;
+    }).join('');
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  // Screenshots
+  const shots = t.screenshots || [];
+  const shotBadge = document.getElementById('shotBadge');
+  if (shots.length) {
+    shotBadge.style.display = '';
+    shotBadge.textContent = shots.length;
+  } else {
+    shotBadge.style.display = 'none';
+  }
+
+  const shotsEl = document.getElementById('dShots');
+  if (!shots.length) {
+    const isActive = ['doing','checking','todo'].includes(t.status);
+    shotsEl.innerHTML = `
+      <div class="shot-empty">
+        <strong>${isActive ? 'Screenshots coming...' : 'No screenshots'}</strong>
+        ${isActive ? 'Playwright will capture when checking starts.' : 'Screenshots are taken during the checking phase.'}
+      </div>`;
+  } else {
+    shotsEl.innerHTML = shots.map(s => `
+      <div class="shot-group">
+        <div class="shot-label">
+          ${s.viewport === 'mobile' ? '📱' : '🖥'} ${s.viewport}
+          <span class="shot-dim">${s.width}×${s.height}</span>
+        </div>
+        <div class="shot-img-wrap" onclick="openLightbox(event,'${API}${s.url}')">
+          <img src="${API}${s.url}?t=${Date.now()}" alt="${s.viewport} screenshot" loading="lazy" />
+        </div>
+        <div class="shot-timestamp">Captured ${ago(s.capturedAt)}</div>
+      </div>
+    `).join('');
+  }
+
+  // Review
+  const reviewTabEl = document.getElementById('reviewTab');
+  const reviewEl = document.getElementById('dReview');
+  if (t.reviewNote) {
+    reviewTabEl.style.display = '';
+    const ok = t.reviewNote.toUpperCase().includes('APPROVED');
+    const prLink = t.prUrl
+      ? `<a href="${t.prUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:12px;color:var(--green);text-decoration:none;padding:6px 12px;background:var(--green-bg);border:1px solid rgba(76,183,130,.25);border-radius:var(--radius)">↗ Open Pull Request</a>`
+      : t.status === 'done'
+      ? `<button onclick="commitTask(event,'${t.id}')" style="display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:12px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:6px 12px;cursor:pointer;font-family:inherit">⬆ Create commit + PR</button>`
+      : '';
+    const retryInfo = t.retryCount > 0
+      ? `<div style="font-size:11px;color:var(--text3);margin-top:8px">Completed after ${t.retryCount} retr${t.retryCount===1?'y':'ies'}</div>`
+      : '';
+    reviewEl.innerHTML = `
+      <div class="review-result ${ok?'ok':'bad'}">${esc(t.reviewNote)}</div>
+      ${retryInfo}
+      ${prLink}`;
+  } else {
+    reviewTabEl.style.display = 'none';
+  }
+}
+
+function closeDrawer() {
+  openId = null;
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.drawer-tab').forEach(el => el.classList.toggle('active', el.dataset.tab === tab));
+  document.querySelectorAll('.drawer-panel').forEach(el => el.classList.toggle('active', el.dataset.panel === tab));
+}
+
+// ── Lightbox ─────────────────────────────────────────────────────
+function openLightbox(e, url) {
+  e.stopPropagation();
+  document.getElementById('lightboxImg').src = url;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeDrawer(); closeLightbox(); }
+});
+
+// ── Misc ─────────────────────────────────────────────────────────
+function scrollToCol(col) { document.getElementById(`col-${col}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function ago(iso) {
+  const s = Math.floor((Date.now() - new Date(iso)) / 1000);
+  if (s < 60) return 'just now';
+  if (s < 3600) return `${Math.floor(s/60)}m ago`;
+  if (s < 86400) return `${Math.floor(s/3600)}h ago`;
+  return new Date(iso).toLocaleDateString();
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+document.getElementById('addModalOverlay').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addTask(); }
+  if (e.key === 'Escape') closeAddModal();
+});
+
+async function commitTask(e, id) {
+  e.stopPropagation();
+  toast('⬆ Creating commit + PR...');
+  await fetch(`${API}/api/tasks/${id}/commit`, { method: 'POST' });
+}
+
+// ── Settings ─────────────────────────────────────────────────────
+let settings = { executor: 'kiro', reviewer: 'kiro', screenshots: true };
+
+function applySettingsUI(s) {
+  document.querySelectorAll('#seg-executor .seg-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.classList.contains(s.executor));
+  });
+  document.querySelectorAll('#seg-reviewer .seg-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.classList.contains(s.reviewer));
+  });
+  document.querySelectorAll('#seg-retries .seg-btn').forEach(btn => {
+    const val = btn.textContent === '∞' ? 0 : 3;
+    btn.classList.toggle('active', val === s.maxRetries);
+  });
+  const sc = document.getElementById('toggle-screenshots');
+  if (sc) sc.checked = s.screenshots;
+  const ac = document.getElementById('toggle-autocommit');
+  if (ac) ac.checked = s.autoCommit;
+  const gt = document.getElementById('gh-token-input');
+  if (gt && s.githubToken) gt.placeholder = 'ghp_•••• (saved)';
+}
+
+async function setSetting(key, value) {
+  const body = { [key]: value };
+  const res = await fetch(`${API}/api/settings`, {
+    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  settings = await res.json();
+  applySettingsUI(settings);
+}
+
+async function loadSettings() {
+  try {
+    settings = await (await fetch(`${API}/api/settings`)).json();
+    applySettingsUI(settings);
+  } catch {}
+}
+
+boot();
+</script>
+</body>
+</html>
