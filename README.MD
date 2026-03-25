@@ -99,14 +99,14 @@ agent-board help
 Run this once inside any project folder:
 
 ```bash
-cd ~/projects/verbatik
+cd ~/projects/YourProject
 agent-board init
 ```
 
 Output:
 
 ```
-✅ Agent Board initialized for: verbatik
+✅ Agent Board initialized for: YourProject
    Directory: agent-board/
    Port:      3333
    tasks.json is git-ignored
@@ -127,13 +127,13 @@ Each repo gets its own port assigned at init time — no conflicts:
 
 ```bash
 # Terminal 1
-cd ~/projects/verbatik && agent-board start    # → :3333
+cd ~/projects/YourProject && agent-board start    # → :3333
 
 # Terminal 2
-cd ~/projects/scraper-md && agent-board start  # → :3788
+cd ~/projects/YourProject && agent-board start  # → :3788
 
 # Terminal 3
-cd ~/projects/seosapient && agent-board start  # → :4102
+cd ~/projects/YourProject && agent-board start  # → :4102
 ```
 
 ---
@@ -428,7 +428,7 @@ SOFTWARE.
 <p align="center">
   Built by <a href="https://github.com/corneliuspopovici">Corneliu Popovici</a> & <a href="https://claude.ai">Claude AI</a>
   &nbsp;·&nbsp;
-  <a href="https://verbatik.com">Verbatik</a>
+ 
   &nbsp;·&nbsp;
   MIT License
 </p>
