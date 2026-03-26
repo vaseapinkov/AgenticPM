@@ -706,6 +706,7 @@ body {
 .drawer-panel.active { display: flex; }
 
 /* Log panel */
+.drawer-details { flex:1; overflow-y:auto; }
 .drawer-log {
   flex: 1;
   overflow-y: auto;
@@ -1392,7 +1393,8 @@ body {
   </div>
 
   <div class="drawer-tabs">
-    <div class="drawer-tab active" data-tab="log" onclick="switchTab('log')">Log</div>
+    <div class="drawer-tab active" data-tab="details" onclick="switchTab('details')">Details</div>
+    <div class="drawer-tab" data-tab="log" onclick="switchTab('log')">Log</div>
     <div class="drawer-tab" data-tab="screenshots" onclick="switchTab('screenshots')">
       Screenshots
       <span class="drawer-tab-badge" id="shotBadge" style="display:none">0</span>
@@ -1400,7 +1402,11 @@ body {
     <div class="drawer-tab" data-tab="review" onclick="switchTab('review')" id="reviewTab" style="display:none">Review</div>
   </div>
 
-  <div class="drawer-panel active" data-panel="log">
+  <div class="drawer-panel active" data-panel="details">
+    <div class="drawer-details" id="dDetails"></div>
+  </div>
+
+  <div class="drawer-panel" data-panel="log">
     <div class="drawer-log" id="dLog"></div>
   </div>
 
@@ -1425,7 +1431,7 @@ body {
 const API = '__API_URL__';
 let tasks = [];
 let openId = null;
-let activeTab = 'log';
+let activeTab = 'details';
 
 const STATUS_COL = { backlog:'backlog', todo:'todo', doing:'doing', checking:'checking', done:'done', 'review-failed':'done', error:'done' };
 
@@ -1700,6 +1706,16 @@ function refreshDrawer(t) {
     <span class="drawer-meta-item">· ${ago(t.createdAt)}</span>
     ${t.doneAt ? `<span class="drawer-meta-item">· done ${ago(t.doneAt)}</span>` : ''}
   `;
+
+  // Details
+  const detailsEl = document.getElementById('dDetails');
+  detailsEl.innerHTML = `
+    <div style="padding:16px">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:6px">Description</div>
+      <div style="font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap">${t.description ? esc(t.description) : '<span style="color:var(--text3)">No description</span>'}</div>
+      ${t.branch ? `<div style="margin-top:16px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">Branch</div><div style="font-size:12px;color:var(--text2);font-family:'SF Mono','Fira Code',monospace">${esc(t.branch)}</div>` : ''}
+      ${t.prUrl ? `<div style="margin-top:12px"><a href="${esc(t.prUrl)}" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none">Open Pull Request ↗</a></div>` : ''}
+    </div>`;
 
   // Log
   const logEl = document.getElementById('dLog');
