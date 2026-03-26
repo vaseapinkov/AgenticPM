@@ -431,6 +431,8 @@ body {
 .col[data-col="backlog"]  .col-pip { background: var(--text3); }
 .col[data-col="todo"]     .col-pip { background: var(--accent); box-shadow: 0 0 0 2px var(--accent-bg); }
 .col[data-col="todo"]     .col-name { color: var(--accent-t); }
+.col[data-col="planning"] .col-pip { background: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,.12); animation: pip-pulse 1.6s ease-in-out infinite; }
+.col[data-col="planning"] .col-name { color: #3b82f6; }
 .col[data-col="doing"]    .col-pip { background: var(--amber); box-shadow: 0 0 0 2px var(--amber-bg); animation: pip-pulse 1.6s ease-in-out infinite; }
 .col[data-col="doing"]    .col-name { color: var(--amber); }
 .col[data-col="checking"] .col-pip { background: var(--violet); box-shadow: 0 0 0 2px var(--violet-bg); animation: pip-pulse 1.6s ease-in-out infinite; }
@@ -899,6 +901,35 @@ body {
 .seg-btn.active.kiro   { color: var(--amber); }
 .seg-btn.active.claude { color: var(--accent-t); }
 
+/* Model dropdown select */
+.model-select {
+  height: 26px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text2);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition);
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2360606a'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  padding-right: 20px;
+  min-width: 120px;
+}
+.model-select:hover { border-color: var(--border2); color: var(--text); }
+.model-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-bg); }
+.model-select optgroup { font-weight: 600; font-size: 10px; color: var(--text3); }
+
+/* Planning badge */
+.badge-planning { background: rgba(59,130,246,.1); color: #3b82f6; }
+
 /* Toggle switch */
 .toggle-wrap {
   display: flex;
@@ -995,6 +1026,14 @@ body {
         <span class="sidebar-badge" id="totalCount">0</span>
       </div>
 
+      <div class="sidebar-item" onclick="scrollToCol('planning')">
+        <div class="sidebar-item-left">
+          <span class="sidebar-item-icon" style="color:#3b82f6">🧠</span>
+          <span class="sidebar-item-label">Planning</span>
+        </div>
+        <span class="sidebar-badge" id="count-planning-nav">0</span>
+      </div>
+
       <div class="sidebar-item" onclick="scrollToCol('doing')">
         <div class="sidebar-item-left">
           <span class="sidebar-item-icon" style="color:var(--amber)">⚙</span>
@@ -1025,19 +1064,69 @@ body {
       <div class="settings-section-label">Settings</div>
 
       <div class="settings-row">
+        <div class="settings-row-label"><span>🧠</span> Planner</div>
+        <select class="model-select" id="sel-planner" onchange="setSetting('planner', this.value)">
+          <optgroup label="Kiro">
+            <option value="kiro:claude-opus-4.6">Claude Opus 4.6</option>
+            <option value="kiro:claude-sonnet-4.6">Claude Sonnet 4.6</option>
+            <option value="kiro:claude-opus-4.5">Claude Opus 4.5</option>
+            <option value="kiro:claude-sonnet-4.5">Claude Sonnet 4.5</option>
+            <option value="kiro:claude-sonnet-4">Claude Sonnet 4</option>
+            <option value="kiro:claude-haiku-4.5">Haiku 4.5</option>
+            <option value="kiro:deepseek-3.2">DeepSeek 3.2</option>
+            <option value="kiro:minimax-m2.5">MiniMax M2.5</option>
+            <option value="kiro:minimax-m2.1">MiniMax M2.1</option>
+            <option value="kiro:qwen3-coder-next">Qwen3 Coder</option>
+          </optgroup>
+          <optgroup label="Claude Code">
+            <option value="claude:opus">Claude Opus</option>
+            <option value="claude:sonnet">Claude Sonnet</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="settings-row">
         <div class="settings-row-label"><span>⚡</span> Executor</div>
-        <div class="seg" id="seg-executor">
-          <button class="seg-btn kiro active" onclick="setSetting('executor','kiro')">Kiro</button>
-          <button class="seg-btn claude" onclick="setSetting('executor','claude')">Claude</button>
-        </div>
+        <select class="model-select" id="sel-executor" onchange="setSetting('executor', this.value)">
+          <optgroup label="Kiro">
+            <option value="kiro:claude-opus-4.6">Claude Opus 4.6</option>
+            <option value="kiro:claude-sonnet-4.6">Claude Sonnet 4.6</option>
+            <option value="kiro:claude-opus-4.5">Claude Opus 4.5</option>
+            <option value="kiro:claude-sonnet-4.5">Claude Sonnet 4.5</option>
+            <option value="kiro:claude-sonnet-4">Claude Sonnet 4</option>
+            <option value="kiro:claude-haiku-4.5">Haiku 4.5</option>
+            <option value="kiro:deepseek-3.2">DeepSeek 3.2</option>
+            <option value="kiro:minimax-m2.5">MiniMax M2.5</option>
+            <option value="kiro:minimax-m2.1">MiniMax M2.1</option>
+            <option value="kiro:qwen3-coder-next">Qwen3 Coder</option>
+          </optgroup>
+          <optgroup label="Claude Code">
+            <option value="claude:opus">Claude Opus</option>
+            <option value="claude:sonnet">Claude Sonnet</option>
+          </optgroup>
+        </select>
       </div>
 
       <div class="settings-row">
         <div class="settings-row-label"><span>🔍</span> Reviewer</div>
-        <div class="seg" id="seg-reviewer">
-          <button class="seg-btn kiro active" onclick="setSetting('reviewer','kiro')">Kiro</button>
-          <button class="seg-btn claude" onclick="setSetting('reviewer','claude')">Claude</button>
-        </div>
+        <select class="model-select" id="sel-reviewer" onchange="setSetting('reviewer', this.value)">
+          <optgroup label="Kiro">
+            <option value="kiro:claude-opus-4.6">Claude Opus 4.6</option>
+            <option value="kiro:claude-sonnet-4.6">Claude Sonnet 4.6</option>
+            <option value="kiro:claude-opus-4.5">Claude Opus 4.5</option>
+            <option value="kiro:claude-sonnet-4.5">Claude Sonnet 4.5</option>
+            <option value="kiro:claude-sonnet-4">Claude Sonnet 4</option>
+            <option value="kiro:claude-haiku-4.5">Haiku 4.5</option>
+            <option value="kiro:deepseek-3.2">DeepSeek 3.2</option>
+            <option value="kiro:minimax-m2.5">MiniMax M2.5</option>
+            <option value="kiro:minimax-m2.1">MiniMax M2.1</option>
+            <option value="kiro:qwen3-coder-next">Qwen3 Coder</option>
+          </optgroup>
+          <optgroup label="Claude Code">
+            <option value="claude:opus">Claude Opus</option>
+            <option value="claude:sonnet">Claude Sonnet</option>
+          </optgroup>
+        </select>
       </div>
 
       <div class="settings-row">
@@ -1132,6 +1221,15 @@ body {
           <div class="col-body" id="cards-todo"></div>
         </div>
 
+        <div class="col" data-col="planning" id="col-planning">
+          <div class="col-head">
+            <div class="col-pip"></div>
+            <div class="col-name">Planning</div>
+            <div class="col-count" id="count-planning">0</div>
+          </div>
+          <div class="col-body" id="cards-planning"></div>
+        </div>
+
         <div class="col" data-col="doing" id="col-doing">
           <div class="col-head">
             <div class="col-pip"></div>
@@ -1176,6 +1274,7 @@ body {
 
   <div class="drawer-tabs">
     <div class="drawer-tab active" data-tab="log" onclick="switchTab('log')">Log</div>
+    <div class="drawer-tab" data-tab="plan" onclick="switchTab('plan')" id="planTab" style="display:none">Plan</div>
     <div class="drawer-tab" data-tab="screenshots" onclick="switchTab('screenshots')">
       Screenshots
       <span class="drawer-tab-badge" id="shotBadge" style="display:none">0</span>
@@ -1185,6 +1284,10 @@ body {
 
   <div class="drawer-panel active" data-panel="log">
     <div class="drawer-log" id="dLog"></div>
+  </div>
+
+  <div class="drawer-panel" data-panel="plan">
+    <div class="drawer-review-panel" id="dPlan" style="white-space:pre-wrap;font-size:12.5px;line-height:1.6;color:var(--text2)"></div>
   </div>
 
   <div class="drawer-panel" data-panel="screenshots">
@@ -1210,7 +1313,7 @@ let tasks = [];
 let openId = null;
 let activeTab = 'log';
 
-const STATUS_COL = { backlog:'backlog', todo:'todo', doing:'doing', checking:'checking', done:'done', 'review-failed':'done', error:'done' };
+const STATUS_COL = { backlog:'backlog', todo:'todo', planning:'planning', doing:'doing', checking:'checking', done:'done', 'review-failed':'done', error:'done' };
 
 // ── Theme ────────────────────────────────────────────────────────
 const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -1301,7 +1404,7 @@ function initDragDrop() {
 
 // ── Render ───────────────────────────────────────────────────────
 function render() {
-  const cols = ['backlog','todo','doing','checking','done'];
+  const cols = ['backlog','todo','planning','doing','checking','done'];
   const buckets = {}; cols.forEach(c => { buckets[c] = []; });
 
   tasks.slice().sort((a,b) => new Date(a.createdAt)-new Date(b.createdAt))
@@ -1338,11 +1441,13 @@ function makeCard(t) {
 
   const doing    = t.status === 'doing';
   const checking = t.status === 'checking';
+  const planning = t.status === 'planning';
   const failed   = t.status === 'review-failed';
   const done     = t.status === 'done';
   const shots    = t.screenshots || [];
 
-  const badge = doing    ? `<span class="badge badge-doing">running</span>`
+  const badge = planning ? `<span class="badge badge-planning">planning</span>`
+    : doing    ? `<span class="badge badge-doing">running</span>`
     : checking ? `<span class="badge badge-checking">reviewing</span>`
     : failed   ? `<span class="badge badge-failed">failed</span>`
     : done     ? `<span class="badge badge-done">done</span>` : '';
@@ -1355,11 +1460,20 @@ function makeCard(t) {
     ? `<div class="card-shot-thumb">${shots.map(s => `<img src="${API}${s.url}" title="${s.viewport}" onclick="openLightbox(event,'${API}${s.url}')">`).join('')}</div>`
     : '';
 
-  const progress = (doing || checking)
-    ? `<div class="card-progress"><div class="card-progress-fill ${doing?'amber':'violet'}"></div></div>` : '';
+  const progress = (planning || doing || checking)
+    ? `<div class="card-progress"><div class="card-progress-fill ${planning?'blue':doing?'amber':'violet'}" ${planning?'style="background:#3b82f6"':''}></div></div>` : '';
 
+  const MODEL_LABELS = {
+    'kiro:claude-opus-4.6': 'Opus 4.6', 'kiro:claude-sonnet-4.6': 'Sonnet 4.6',
+    'kiro:claude-opus-4.5': 'Opus 4.5', 'kiro:claude-sonnet-4.5': 'Sonnet 4.5',
+    'kiro:claude-sonnet-4': 'Sonnet 4', 'kiro:claude-haiku-4.5': 'Haiku 4.5',
+    'kiro:deepseek-3.2': 'DeepSeek', 'kiro:minimax-m2.5': 'MiniMax 2.5',
+    'kiro:minimax-m2.1': 'MiniMax 2.1', 'kiro:qwen3-coder-next': 'Qwen3',
+    'claude:opus': 'CC Opus', 'claude:sonnet': 'CC Sonnet'
+  };
+  const modelLabel = (m) => MODEL_LABELS[m] || m;
   const agentChip = (done || failed) && t.usedExecutor
-    ? `<span style="font-size:10px;color:var(--text4);margin-right:2px">${t.usedExecutor === 'claude' ? 'Claude' : 'Kiro'}→${t.usedReviewer === 'claude' ? 'Claude' : 'Kiro'}</span>`
+    ? `<span style="font-size:10px;color:var(--text4);margin-right:2px">${t.usedPlanner ? modelLabel(t.usedPlanner)+'→' : ''}${modelLabel(t.usedExecutor)}→${modelLabel(t.usedReviewer)}</span>`
     : '';
 
   const retryChip = t.retryCount > 0
@@ -1448,7 +1562,7 @@ function refreshDrawer(t) {
 
   // Meta
   const metaEl = document.getElementById('dMeta');
-  const statusColor = { doing:'amber', checking:'violet', done:'green', 'review-failed':'red', backlog:'', todo:'accent' }[t.status] || '';
+  const statusColor = { planning:'accent', doing:'amber', checking:'violet', done:'green', 'review-failed':'red', backlog:'', todo:'accent' }[t.status] || '';
   metaEl.innerHTML = `
     <span class="drawer-meta-item" style="color:var(--${statusColor||'text3'})">${t.status}</span>
     <span class="drawer-meta-item">· ${ago(t.createdAt)}</span>
@@ -1462,6 +1576,7 @@ function refreshDrawer(t) {
   } else {
     logEl.innerHTML = t.log.split('\n').filter(Boolean).map(l => {
       const cls = l.includes('[Kiro Review]') ? 'review'
+        : l.includes('[Planner]') ? 'shot'
         : l.includes('[Kiro]') ? 'kiro'
         : l.includes('[Screenshots]') ? 'shot'
         : (l.includes('✅') || l.includes('🎉') || l.includes('✓')) ? 'ok'
@@ -1503,6 +1618,17 @@ function refreshDrawer(t) {
         <div class="shot-timestamp">Captured ${ago(s.capturedAt)}</div>
       </div>
     `).join('');
+  }
+
+  // Plan
+  const planTabEl = document.getElementById('planTab');
+  const planEl = document.getElementById('dPlan');
+  if (t.plan) {
+    planTabEl.style.display = '';
+    planEl.innerHTML = `<div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);font-family:'SF Mono','Fira Code',monospace;font-size:11.5px;line-height:1.7;color:var(--text2);white-space:pre-wrap">${esc(t.plan)}</div>`;
+  } else {
+    planTabEl.style.display = 'none';
+    planEl.innerHTML = '';
   }
 
   // Review
@@ -1582,15 +1708,15 @@ async function commitTask(e, id) {
 }
 
 // ── Settings ─────────────────────────────────────────────────────
-let settings = { executor: 'kiro', reviewer: 'kiro', screenshots: true };
+let settings = { planner: 'kiro:claude-opus-4.6', executor: 'kiro:claude-opus-4.6', reviewer: 'kiro:claude-opus-4.6', screenshots: true };
 
 function applySettingsUI(s) {
-  document.querySelectorAll('#seg-executor .seg-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.classList.contains(s.executor));
-  });
-  document.querySelectorAll('#seg-reviewer .seg-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.classList.contains(s.reviewer));
-  });
+  const selPlanner = document.getElementById('sel-planner');
+  if (selPlanner) selPlanner.value = s.planner || 'kiro:claude-opus-4.6';
+  const selExecutor = document.getElementById('sel-executor');
+  if (selExecutor) selExecutor.value = s.executor || 'kiro:claude-opus-4.6';
+  const selReviewer = document.getElementById('sel-reviewer');
+  if (selReviewer) selReviewer.value = s.reviewer || 'kiro:claude-opus-4.6';
   document.querySelectorAll('#seg-retries .seg-btn').forEach(btn => {
     const val = btn.textContent === '∞' ? 0 : 3;
     btn.classList.toggle('active', val === s.maxRetries);
