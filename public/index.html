@@ -86,7 +86,7 @@ body {
 .layout { display: flex; flex: 1; overflow: hidden; }
 
 .sidebar {
-  width: 220px;
+  width: 250px;
   flex-shrink: 0;
   background: var(--bg2);
   border-right: 1px solid var(--border);
@@ -1253,6 +1253,28 @@ body {
       <div class="settings-section-label">Settings</div>
 
       <div class="settings-row">
+        <div class="settings-row-label"><span>💡</span> Brainstorm</div>
+        <select class="model-select" id="sel-brainstorm" onchange="setSetting('brainstorm', this.value)">
+          <optgroup label="Kiro">
+            <option value="kiro:claude-opus-4.6">Claude Opus 4.6</option>
+            <option value="kiro:claude-sonnet-4.6">Claude Sonnet 4.6</option>
+            <option value="kiro:claude-opus-4.5">Claude Opus 4.5</option>
+            <option value="kiro:claude-sonnet-4.5">Claude Sonnet 4.5</option>
+            <option value="kiro:claude-sonnet-4">Claude Sonnet 4</option>
+            <option value="kiro:claude-haiku-4.5">Haiku 4.5</option>
+            <option value="kiro:deepseek-3.2">DeepSeek 3.2</option>
+            <option value="kiro:minimax-m2.5">MiniMax M2.5</option>
+            <option value="kiro:minimax-m2.1">MiniMax M2.1</option>
+            <option value="kiro:qwen3-coder-next">Qwen3 Coder</option>
+          </optgroup>
+          <optgroup label="Claude Code">
+            <option value="claude:opus">Claude Opus</option>
+            <option value="claude:sonnet">Claude Sonnet</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="settings-row">
         <div class="settings-row-label"><span>🧠</span> Planner</div>
         <select class="model-select" id="sel-planner" onchange="setSetting('planner', this.value)">
           <optgroup label="Kiro">
@@ -1981,6 +2003,8 @@ async function commitTask(e, id) {
 let settings = { planner: 'kiro:claude-opus-4.6', executor: 'kiro:claude-opus-4.6', reviewer: 'kiro:claude-opus-4.6', screenshots: true };
 
 function applySettingsUI(s) {
+  const selBrainstorm = document.getElementById('sel-brainstorm');
+  if (selBrainstorm) selBrainstorm.value = s.brainstorm || 'kiro:claude-opus-4.6';
   const selPlanner = document.getElementById('sel-planner');
   if (selPlanner) selPlanner.value = s.planner || 'kiro:claude-opus-4.6';
   const selExecutor = document.getElementById('sel-executor');
