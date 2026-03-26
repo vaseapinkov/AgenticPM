@@ -52,7 +52,7 @@ async function init() {
   fs.mkdirSync(BOARD_DIR, { recursive: true });
   fs.writeFileSync(CONFIG_FILE, JSON.stringify({ repoName, port, createdAt: new Date().toISOString() }, null, 2));
   fs.writeFileSync(TASKS_FILE, JSON.stringify([], null, 2));
-  fs.writeFileSync(GITIGNORE_FILE, '# Agent Board - local only, do not commit\ntasks.json\n');
+  fs.writeFileSync(GITIGNORE_FILE, '# Agent Board - local only, do not commit\ntasks.json\nbrainstorms.json\nsettings.json\n');
 
   console.log(`\n✅ Agent Board initialized for: ${repoName}`);
   console.log(`   Directory: agent-board/`);

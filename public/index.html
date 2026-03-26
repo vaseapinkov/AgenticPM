@@ -149,7 +149,6 @@ body {
 
 .sidebar-section {
   padding: 4px 8px;
-  flex: 1;
 }
 
 .sidebar-section-label {
@@ -837,6 +836,7 @@ body {
   padding: 8px;
   border-top: 1px solid var(--border);
   flex-shrink: 0;
+  margin-top: auto;
 }
 
 .settings-section-label {
@@ -966,6 +966,182 @@ body {
   box-shadow: var(--shadow);
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── Brainstorm ────────────────────────────────────────────────── */
+.brainstorm-view { display:none; flex:1; flex-direction:column; height:100vh; overflow:hidden; }
+.brainstorm-view.open { display:flex; }
+.brainstorm-header {
+  display:flex; align-items:center; gap:12px; padding:10px 20px;
+  border-bottom:1px solid var(--border); background:var(--bg2); min-height:48px;
+}
+.brainstorm-title { font-weight:600; font-size:14px; color:var(--text); flex:1; }
+.brainstorm-phase {
+  font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.6px;
+  padding:3px 8px; border-radius:10px; background:var(--violet-bg); color:var(--violet);
+}
+.brainstorm-phase.discovery { background:var(--green-bg); color:var(--green); }
+
+.brainstorm-chat {
+  flex:1; overflow-y:auto; padding:20px 24px; display:flex; flex-direction:column; gap:16px;
+}
+.brainstorm-msg {
+  display:flex; gap:10px; max-width:85%; animation: card-appear .25s ease;
+}
+.brainstorm-msg.user { align-self:flex-end; flex-direction:row-reverse; }
+.brainstorm-msg.assistant { align-self:flex-start; }
+
+.brainstorm-avatar {
+  width:28px; height:28px; border-radius:50%; background:var(--violet);
+  color:#fff; font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.brainstorm-bubble {
+  padding:10px 14px; border-radius:var(--radius-lg); font-size:13px; line-height:1.55;
+  color:var(--text); white-space:pre-wrap; word-break:break-word;
+}
+.brainstorm-msg.assistant .brainstorm-bubble { background:var(--bg3); }
+.brainstorm-msg.user .brainstorm-bubble { background:var(--accent-bg); }
+.brainstorm-bubble p { margin-bottom:8px; }
+.brainstorm-bubble p:last-child { margin-bottom:0; }
+.brainstorm-bubble strong { font-weight:600; }
+.brainstorm-bubble ul, .brainstorm-bubble ol { padding-left:18px; margin-bottom:8px; }
+.brainstorm-bubble li { margin-bottom:3px; }
+.brainstorm-time {
+  font-size:10px; color:var(--text3); margin-top:4px;
+  text-align:right;
+}
+.brainstorm-msg.assistant .brainstorm-time { text-align:left; }
+
+.brainstorm-typing {
+  display:flex; gap:4px; padding:10px 14px; align-self:flex-start;
+}
+.brainstorm-typing span {
+  width:7px; height:7px; border-radius:50%; background:var(--text3);
+  animation:typing-dot 1.2s ease-in-out infinite;
+}
+.brainstorm-typing span:nth-child(2) { animation-delay:.2s; }
+.brainstorm-typing span:nth-child(3) { animation-delay:.4s; }
+@keyframes typing-dot { 0%,60%,100%{opacity:.3;transform:translateY(0)} 30%{opacity:1;transform:translateY(-4px)} }
+
+.brainstorm-input-area {
+  display:flex; gap:10px; padding:12px 20px; border-top:1px solid var(--border);
+  background:var(--bg2);
+}
+.brainstorm-input {
+  flex:1; resize:none; border:1px solid var(--border); border-radius:var(--radius);
+  background:var(--bg); color:var(--text); padding:8px 12px; font-size:13px;
+  font-family:'Inter',sans-serif; outline:none; min-height:40px; max-height:120px;
+  transition:border var(--transition);
+}
+.brainstorm-input:focus { border-color:var(--accent); }
+.brainstorm-send {
+  align-self:flex-end; padding:8px 16px; border:none; border-radius:var(--radius);
+  background:var(--violet); color:#fff; font-size:13px; font-weight:600;
+  cursor:pointer; transition:opacity var(--transition);
+}
+.brainstorm-send:disabled { opacity:.4; cursor:not-allowed; }
+.brainstorm-send:hover:not(:disabled) { opacity:.85; }
+
+/* Task list inline in chat */
+.bs-task-list { margin-top:12px; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.bs-epic-header {
+  padding:8px 12px; background:var(--bg4); font-weight:600; font-size:12px;
+  color:var(--text); cursor:pointer; display:flex; align-items:center; gap:6px;
+  border-bottom:1px solid var(--border);
+}
+.bs-epic-header:hover { background:var(--bg3); }
+.bs-task-row {
+  display:flex; align-items:center; gap:8px; padding:6px 12px 6px 28px;
+  border-bottom:1px solid var(--border); font-size:12px;
+}
+.bs-task-row:last-child { border-bottom:none; }
+.bs-task-row input[type="checkbox"] { accent-color:var(--violet); }
+.bs-task-title { flex:1; color:var(--text); }
+.bs-complexity {
+  font-size:10px; font-weight:600; padding:2px 6px; border-radius:8px;
+  text-transform:uppercase; letter-spacing:.4px;
+}
+.bs-complexity.xs, .bs-complexity.s { background:var(--green-bg); color:var(--green); }
+.bs-complexity.m { background:var(--amber-bg); color:var(--amber); }
+.bs-complexity.l, .bs-complexity.xl { background:var(--red-bg); color:var(--red); }
+.bs-import-bar {
+  display:flex; gap:8px; margin-top:10px; justify-content:flex-end;
+}
+.bs-import-bar .btn-primary { font-size:12px; padding:6px 14px; background:var(--violet); }
+.bs-import-bar .btn-secondary { font-size:12px; padding:6px 14px; }
+.bs-imported { color:var(--green); font-weight:600; font-size:12px; }
+
+/* Structured question card */
+.bs-question-card {
+  margin-top:8px; padding:12px 14px; border-left:3px solid var(--violet);
+  background:var(--bg4); border-radius:0 var(--radius) var(--radius) 0;
+  font-size:14px; font-weight:500; color:var(--text); line-height:1.5;
+}
+.bs-suggestions {
+  display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;
+}
+.bs-suggestion {
+  padding:5px 12px; border:1px solid var(--border2); border-radius:16px;
+  background:var(--bg); color:var(--text2); font-size:12px; cursor:pointer;
+  transition:all var(--transition);
+}
+.bs-suggestion:hover { border-color:var(--violet); color:var(--violet); background:var(--violet-bg); }
+.bs-progress-bar {
+  margin-top:10px; display:flex; align-items:center; gap:8px;
+}
+.bs-progress-track {
+  flex:1; height:4px; background:var(--border); border-radius:2px; overflow:hidden;
+}
+.bs-progress-fill {
+  height:100%; background:var(--violet); border-radius:2px; transition:width .4s ease;
+}
+.bs-progress-label {
+  font-size:11px; color:var(--text3); white-space:nowrap;
+}
+
+/* Summary card */
+.bs-summary-card {
+  margin-top:8px; padding:14px; border:1px solid var(--green); border-radius:var(--radius);
+  background:var(--green-bg);
+}
+.bs-summary-title {
+  font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px;
+  color:var(--green); margin-bottom:6px;
+}
+.bs-summary-text { font-size:13px; color:var(--text); line-height:1.5; }
+.bs-summary-actions { display:flex; gap:8px; margin-top:10px; }
+.bs-summary-actions .btn-primary { font-size:12px; padding:6px 14px; background:var(--green); }
+.bs-summary-actions .btn-secondary { font-size:12px; padding:6px 14px; }
+
+/* Session list */
+.brainstorm-sessions {
+  flex:1; overflow-y:auto; padding:24px;
+}
+.bs-sessions-header {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+}
+.bs-sessions-title { font-size:16px; font-weight:600; color:var(--text); }
+.bs-session-row {
+  display:flex; align-items:center; gap:12px; padding:12px 14px;
+  border:1px solid var(--border); border-radius:var(--radius); margin-bottom:8px;
+  cursor:pointer; transition:background var(--transition);
+}
+.bs-session-row:hover { background:var(--bg3); }
+.bs-session-info { flex:1; min-width:0; }
+.bs-session-name { font-size:13px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bs-session-meta { font-size:11px; color:var(--text3); margin-top:2px; }
+.bs-session-status {
+  font-size:10px; font-weight:600; padding:2px 8px; border-radius:8px;
+  text-transform:uppercase; letter-spacing:.4px; flex-shrink:0;
+}
+.bs-session-status.active { background:var(--green-bg); color:var(--green); }
+.bs-session-status.imported { background:var(--violet-bg); color:var(--violet); }
+.bs-session-del {
+  background:none; border:none; color:var(--text3); cursor:pointer; font-size:14px;
+  padding:4px; border-radius:4px; transition:color var(--transition);
+}
+.bs-session-del:hover { color:var(--red); }
+.bs-empty { text-align:center; color:var(--text3); padding:40px 0; font-size:13px; }
 </style>
 </head>
 <body>
@@ -987,7 +1163,7 @@ body {
     <div class="sidebar-section">
       <div class="sidebar-section-label">Board</div>
 
-      <div class="sidebar-item active">
+      <div class="sidebar-item active" id="nav-all" onclick="navToBoard()">
         <div class="sidebar-item-left">
           <span class="sidebar-item-icon">☰</span>
           <span class="sidebar-item-label">All tasks</span>
@@ -995,7 +1171,7 @@ body {
         <span class="sidebar-badge" id="totalCount">0</span>
       </div>
 
-      <div class="sidebar-item" onclick="scrollToCol('doing')">
+      <div class="sidebar-item" id="nav-doing" onclick="navToBoard('doing')">
         <div class="sidebar-item-left">
           <span class="sidebar-item-icon" style="color:var(--amber)">⚙</span>
           <span class="sidebar-item-label">In progress</span>
@@ -1003,7 +1179,7 @@ body {
         <span class="sidebar-badge" id="count-doing-nav">0</span>
       </div>
 
-      <div class="sidebar-item" onclick="scrollToCol('checking')">
+      <div class="sidebar-item" id="nav-checking" onclick="navToBoard('checking')">
         <div class="sidebar-item-left">
           <span class="sidebar-item-icon" style="color:var(--violet)">◎</span>
           <span class="sidebar-item-label">Checking</span>
@@ -1011,12 +1187,24 @@ body {
         <span class="sidebar-badge" id="count-checking-nav">0</span>
       </div>
 
-      <div class="sidebar-item" onclick="scrollToCol('done')">
+      <div class="sidebar-item" id="nav-done" onclick="navToBoard('done')">
         <div class="sidebar-item-left">
           <span class="sidebar-item-icon" style="color:var(--green)">✓</span>
           <span class="sidebar-item-label">Done</span>
         </div>
         <span class="sidebar-badge" id="count-done-nav">0</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Tools</div>
+
+      <div class="sidebar-item" id="nav-brainstorm" onclick="openBrainstorm()">
+        <div class="sidebar-item-left">
+          <span class="sidebar-item-icon" style="color:var(--violet)">&#x1f4a1;</span>
+          <span class="sidebar-item-label">Brainstorm</span>
+        </div>
+        <span class="sidebar-badge" id="count-brainstorms">0</span>
       </div>
     </div>
 
@@ -1088,6 +1276,7 @@ body {
     <div class="topbar">
       <span class="topbar-title">Board</span>
       <div class="topbar-sep"></div>
+      <button class="btn-primary" style="background:var(--violet)" onclick="openBrainstorm()">&#x1f4a1; Brainstorm</button>
       <button class="btn-primary" onclick="openAddModal()">+ New task</button>
     </div>
 
@@ -1160,6 +1349,34 @@ body {
         </div>
       </div>
     </div>
+
+    <!-- Brainstorm View -->
+    <div class="brainstorm-view" id="brainstormView">
+      <!-- Session List -->
+      <div class="brainstorm-sessions" id="bsSessionList">
+        <div class="bs-sessions-header">
+          <span class="bs-sessions-title" style="flex:1">Brainstorms</span>
+          <button class="btn-primary" style="background:var(--violet);font-size:12px;padding:6px 14px" onclick="createNewBrainstorm()">+ New</button>
+        </div>
+        <div id="bsSessionRows"></div>
+      </div>
+
+      <!-- Chat View (hidden until a session is selected) -->
+      <div id="bsChatWrap" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+        <div class="brainstorm-header">
+          <button class="btn-secondary" onclick="showBsSessions()" style="font-size:12px;padding:4px 12px">&#8592; Sessions</button>
+          <span class="brainstorm-title" id="bsTitle">Brainstorm with Alex</span>
+          <span class="brainstorm-phase discovery" id="bsPhase">Discovery</span>
+        </div>
+        <div class="brainstorm-chat" id="bsChat"></div>
+        <div class="bs-suggestions" id="bsSuggestionsArea" style="display:none;padding:10px 20px 10px;border-top:1px solid var(--border)"></div>
+        <div class="brainstorm-input-area">
+          <textarea class="brainstorm-input" id="bsInput" placeholder="Describe what you want to build..." rows="2"></textarea>
+          <button class="brainstorm-send" id="bsSend" onclick="sendBsMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1257,6 +1474,34 @@ function sse() {
     tasks = tasks.filter(t => t.id !== id); render();
     if (openId === id) closeDrawer();
   });
+  // Brainstorm SSE events
+  es.addEventListener('brainstorm-updated', e => {
+    const bs = JSON.parse(e.data);
+    if (activeBrainstorm && activeBrainstorm.id === bs.id) {
+      activeBrainstorm = bs;
+      // Only clear sending state when assistant has replied
+      const lastMsg = bs.messages?.[bs.messages.length - 1];
+      if (!bsSending || (lastMsg && lastMsg.role === 'assistant')) {
+        bsSending = false;
+        bsStreamChunks = '';
+        document.getElementById('bsSend').disabled = false;
+      }
+      renderBsChat();
+    }
+    loadBsState();
+  });
+  es.addEventListener('brainstorm-streaming', () => {
+    // Streaming chunks ignored — full message arrives via brainstorm-updated
+  });
+  es.addEventListener('brainstorm-created', () => loadBsState());
+  es.addEventListener('brainstorm-deleted', e => {
+    const { id } = JSON.parse(e.data);
+    if (activeBrainstorm && activeBrainstorm.id === id) {
+      activeBrainstorm = null;
+      closeBrainstorm();
+    }
+    loadBsState();
+  });
   es.onerror = () => {
     document.getElementById('connDot').className = 'sidebar-repo-dot offline';
     es.close(); setTimeout(sse, 3000);
@@ -1274,6 +1519,7 @@ async function boot() {
     tasks = await (await fetch(`${API}/api/tasks`)).json();
     render(); sse(); initDragDrop();
     await loadSettings();
+    await loadBsState();
   } catch {
     document.getElementById('connDot').className = 'sidebar-repo-dot offline';
     toast('⚠ Server offline on port __PORT__');
@@ -1548,7 +1794,15 @@ function openLightbox(e, url) {
 }
 function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeDrawer(); closeLightbox(); }
+  if (e.key === 'Escape') {
+    if (currentView === 'brainstorm') closeBrainstorm();
+    else { closeDrawer(); closeLightbox(); }
+  }
+});
+
+// Brainstorm input: Enter to send, Shift+Enter for newline
+document.getElementById('bsInput')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendBsMessage(); }
 });
 
 // ── Misc ─────────────────────────────────────────────────────────
@@ -1617,6 +1871,368 @@ async function loadSettings() {
   try {
     settings = await (await fetch(`${API}/api/settings`)).json();
     applySettingsUI(settings);
+  } catch {}
+}
+
+// ── Brainstorm ──────────────────────────────────────────────────
+
+let currentView = 'board';
+let activeBrainstorm = null;
+let bsSending = false;
+let bsStreamChunks = '';
+
+function setActiveNav(id) {
+  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+  if (id) document.getElementById(id)?.classList.add('active');
+}
+
+function navToBoard(col) {
+  if (currentView === 'brainstorm') {
+    currentView = 'board';
+    activeBrainstorm = null;
+    document.querySelector('.topbar').style.display = '';
+    document.querySelector('.board-wrap').style.display = '';
+    document.getElementById('brainstormView').classList.remove('open');
+  }
+  setActiveNav(col ? 'nav-' + col : 'nav-all');
+  if (col) scrollToCol(col);
+}
+
+function openBrainstorm() {
+  currentView = 'brainstorm';
+  document.querySelector('.topbar').style.display = 'none';
+  document.querySelector('.board-wrap').style.display = 'none';
+  document.getElementById('brainstormView').classList.add('open');
+  setActiveNav('nav-brainstorm');
+
+  activeBrainstorm = null;
+  showBsSessions();
+}
+
+async function showBsSessions() {
+  activeBrainstorm = null;
+  document.getElementById('bsSessionList').style.display = '';
+  document.getElementById('bsChatWrap').style.display = 'none';
+
+  try {
+    const sessions = await (await fetch(`${API}/api/brainstorms`)).json();
+    renderBsSessions(sessions);
+  } catch {}
+}
+
+function renderBsSessions(sessions) {
+  const container = document.getElementById('bsSessionRows');
+  if (!sessions.length) {
+    container.innerHTML = '<div class="bs-empty">No brainstorm sessions yet.<br>Click "+ New" to start one.</div>';
+    return;
+  }
+  container.innerHTML = sessions.sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt)).map(s => {
+    const msgCount = (s.messages || []).filter(m => m.role !== 'system').length;
+    return `<div class="bs-session-row" onclick="selectBsSession('${s.id}')">
+      <div class="bs-session-info">
+        <div class="bs-session-name">${esc(s.title || 'Untitled')}</div>
+        <div class="bs-session-meta">${msgCount} messages &middot; ${ago(s.updatedAt || s.createdAt)}</div>
+      </div>
+      <span class="bs-session-status ${s.status}">${s.status}</span>
+      <button class="bs-session-del" onclick="event.stopPropagation();deleteBsSession('${s.id}')" title="Delete">&#x2715;</button>
+    </div>`;
+  }).join('');
+}
+
+async function selectBsSession(id) {
+  try {
+    activeBrainstorm = await (await fetch(`${API}/api/brainstorms/${id}`)).json();
+  } catch { return; }
+  document.getElementById('bsSessionList').style.display = 'none';
+  document.getElementById('bsChatWrap').style.display = 'flex';
+  renderBsChat();
+  document.getElementById('bsInput').focus();
+}
+
+async function createNewBrainstorm() {
+  try {
+    const res = await fetch(`${API}/api/brainstorms`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: '' })
+    });
+    const bs = await res.json();
+    await selectBsSession(bs.id);
+  } catch {}
+}
+
+async function deleteBsSession(id) {
+  await fetch(`${API}/api/brainstorms/${id}`, { method: 'DELETE' });
+  showBsSessions();
+}
+
+function formatBsText(text) {
+  return esc(text)
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^/,'<p>').replace(/$/,'</p>');
+}
+
+function normalizeGeneratedTasks(raw) {
+  if (!raw || !raw.length) return [];
+  // If first item has .tasks array, it's already {epic, tasks[]} format
+  if (raw[0].tasks && Array.isArray(raw[0].tasks)) return raw;
+  // Otherwise it's a flat array of tasks — wrap in a single epic
+  return [{ epic: 'Tasks', tasks: raw }];
+}
+
+function renderBsTaskList(rawTasks, bsId) {
+  const epics = normalizeGeneratedTasks(rawTasks);
+  if (!epics.length) return '';
+  const imported = activeBrainstorm?.status === 'imported';
+  let html = '<div class="bs-task-list">';
+  epics.forEach((epic, ei) => {
+    const tasks = epic.tasks || [];
+    if (epic.epic && epic.epic !== 'Tasks') {
+      html += `<div class="bs-epic-header">${esc(epic.epic)} (${tasks.length})</div>`;
+    }
+    tasks.forEach((t, ti) => {
+      const cx = (t.complexity || 'M').toLowerCase();
+      html += `<div class="bs-task-row">
+        <input type="checkbox" checked data-ei="${ei}" data-ti="${ti}" class="bs-check" ${imported?'disabled':''}>
+        <span class="bs-task-title">${esc(t.title)}</span>
+        <span class="bs-complexity ${cx}">${esc(t.complexity||'M')}</span>
+      </div>`;
+    });
+  });
+  html += '</div>';
+  if (imported) {
+    html += `<div class="bs-imported">Imported ${activeBrainstorm.importedTaskIds?.length || 0} tasks to backlog</div>`;
+  } else {
+    html += `<div class="bs-import-bar">
+      <button class="btn-secondary" onclick="importBsTasks('${bsId}', false)">Import Selected</button>
+      <button class="btn-primary" onclick="importBsTasks('${bsId}', true)">Import All</button>
+    </div>`;
+  }
+  return html;
+}
+
+function tryParseJson(text) {
+  if (!text || !text.trim().startsWith('{')) return null;
+  const cleaned = text.replace(/^```json?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
+  // Try direct parse
+  try {
+    const p = JSON.parse(cleaned);
+    if (p && p.type) return p;
+  } catch {}
+  // Try extracting first balanced JSON object (handles duplicated JSON)
+  let depth = 0, start = -1;
+  for (let i = 0; i < cleaned.length; i++) {
+    if (cleaned[i] === '{') { if (depth === 0) start = i; depth++; }
+    else if (cleaned[i] === '}') { depth--; if (depth === 0 && start >= 0) {
+      try {
+        const p = JSON.parse(cleaned.substring(start, i + 1));
+        if (p && p.type) return p;
+      } catch {} break;
+    }}
+  }
+  return null;
+}
+
+function parseStructured(m) {
+  // Try content first — most reliable source
+  const fromContent = tryParseJson(m.content);
+  if (fromContent) return fromContent;
+  // Fall back to structured field
+  if (m.structured && m.structured.type) {
+    if (m.structured.type === 'chat' && typeof m.structured.content === 'string') {
+      const inner = tryParseJson(m.structured.content);
+      if (inner) return inner;
+    }
+    return m.structured;
+  }
+  return null;
+}
+
+function renderStructuredMsg(m, isLastAssistant) {
+  const s = parseStructured(m);
+  if (!s) {
+    const hasEpics = isLastAssistant && activeBrainstorm?.generatedTasks?.length > 0;
+    const taskHtml = hasEpics ? renderBsTaskList(activeBrainstorm.generatedTasks, activeBrainstorm.id) : '';
+    return `<div class="brainstorm-bubble">${formatBsText(m.content)}</div>${taskHtml}`;
+  }
+
+  switch (s.type) {
+    case 'question': {
+      // Progress bar only on the latest unanswered question
+      const showProgress = isLastAssistant && s.progress;
+      const pct = showProgress ? Math.round((s.progress.current / s.progress.total) * 100) : 0;
+      const progLabel = showProgress ? `${s.progress.current} of ${s.progress.total}` : '';
+      const areaLabel = showProgress && s.progress.label ? ` — ${esc(s.progress.label)}` : '';
+      return `${s.context ? `<div class="brainstorm-bubble">${formatBsText(s.context)}</div>` : ''}
+        <div class="bs-question-card">${esc(s.question)}</div>
+        ${showProgress ? `<div class="bs-progress-bar">
+          <div class="bs-progress-track"><div class="bs-progress-fill" style="width:${pct}%"></div></div>
+          <span class="bs-progress-label">${progLabel}${areaLabel}</span>
+        </div>` : ''}`;
+    }
+    case 'summary': {
+      const isConfirmed = activeBrainstorm?.generatedTasks?.length > 0;
+      return `<div class="bs-summary-card">
+        <div class="bs-summary-title">Scope Summary</div>
+        <div class="bs-summary-text">${formatBsText(s.content)}</div>
+        ${!isConfirmed && isLastAssistant ? `<div class="bs-summary-actions">
+          <button class="btn-primary" onclick="confirmSummary()">Looks good, generate tasks</button>
+          <button class="btn-secondary" onclick="adjustSummary()">Let me adjust</button>
+        </div>` : ''}
+      </div>`;
+    }
+    case 'tasks': {
+      const epics = s.epics || activeBrainstorm?.generatedTasks || [];
+      return renderBsTaskList(epics, activeBrainstorm?.id);
+    }
+    case 'chat':
+    default:
+      return `<div class="brainstorm-bubble">${formatBsText(s.content || m.content)}</div>`;
+  }
+}
+
+function renderBsChat() {
+  if (!activeBrainstorm) return;
+  const chat = document.getElementById('bsChat');
+  const msgs = activeBrainstorm.messages || [];
+
+  document.getElementById('bsTitle').textContent = activeBrainstorm.title || 'Brainstorm with Alex';
+
+  // Detect phase from messages
+  const lastStructured = [...msgs].reverse().find(m => m.structured)?.structured;
+  const phase = lastStructured?.type === 'tasks' ? 'Delivery'
+    : lastStructured?.type === 'summary' ? 'Summary'
+    : 'Discovery';
+  const phaseEl = document.getElementById('bsPhase');
+  phaseEl.textContent = phase;
+  phaseEl.className = 'brainstorm-phase' + (phase === 'Discovery' ? ' discovery' : '');
+
+  // Find the last assistant message index
+  const lastAssistantIdx = msgs.reduce((acc, m, i) => m.role === 'assistant' ? i : acc, -1);
+
+  chat.innerHTML = msgs.map((m, i) => {
+    if (m.role === 'system') return '';
+    const isUser = m.role === 'user';
+    const isLastAssistant = !isUser && i === lastAssistantIdx;
+
+    if (isUser) {
+      return `<div class="brainstorm-msg user">
+        <div><div class="brainstorm-bubble">${formatBsText(m.content)}</div>
+        <div class="brainstorm-time">${timeAgo(m.timestamp)}</div></div>
+      </div>`;
+    }
+
+    return `<div class="brainstorm-msg assistant">
+      <div class="brainstorm-avatar">A</div>
+      <div>
+        ${renderStructuredMsg(m, isLastAssistant)}
+        <div class="brainstorm-time">${timeAgo(m.timestamp)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  if (bsSending) {
+    chat.innerHTML += `<div class="brainstorm-msg assistant">
+      <div class="brainstorm-avatar">A</div>
+      <div class="brainstorm-typing"><span></span><span></span><span></span></div>
+    </div>`;
+  }
+
+  chat.scrollTop = chat.scrollHeight;
+
+  // Render suggestion pills above input (only for the latest unanswered question)
+  const suggestionsArea = document.getElementById('bsSuggestionsArea');
+  if (suggestionsArea) {
+    const lastMsg = msgs[msgs.length - 1];
+    const lastS = lastMsg?.role === 'assistant' ? parseStructured(lastMsg) : null;
+    if (lastS?.type === 'question' && lastS.suggestions?.length && !bsSending) {
+      suggestionsArea.innerHTML = lastS.suggestions.map(sg =>
+        `<button class="bs-suggestion" onclick="useSuggestion(this)" data-text="${esc(sg)}">${esc(sg)}</button>`
+      ).join('');
+      suggestionsArea.style.display = 'flex';
+    } else {
+      suggestionsArea.innerHTML = '';
+      suggestionsArea.style.display = 'none';
+    }
+  }
+}
+
+function useSuggestion(btn) {
+  const text = btn.dataset.text;
+  document.getElementById('bsInput').value = text;
+  sendBsMessage();
+}
+
+function confirmSummary() {
+  document.getElementById('bsInput').value = 'Looks good, generate the tasks';
+  sendBsMessage();
+}
+
+function adjustSummary() {
+  document.getElementById('bsInput').focus();
+  document.getElementById('bsInput').placeholder = 'What would you like to adjust?';
+}
+
+function timeAgo(ts) {
+  if (!ts) return '';
+  const diff = Date.now() - new Date(ts).getTime();
+  if (diff < 60000) return 'just now';
+  if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
+  return Math.floor(diff/3600000) + 'h ago';
+}
+
+async function sendBsMessage() {
+  if (bsSending || !activeBrainstorm) return;
+  const input = document.getElementById('bsInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  bsSending = true;
+  bsStreamChunks = '';
+  input.value = '';
+  document.getElementById('bsSend').disabled = true;
+  renderBsChat(); // re-render to show typing indicator
+
+  try {
+    await fetch(`${API}/api/brainstorms/${activeBrainstorm.id}/messages`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: msg })
+    });
+    // Response arrives via SSE brainstorm-updated
+  } catch {
+    bsSending = false;
+    document.getElementById('bsSend').disabled = false;
+    renderBsChat();
+    toast('Failed to send message');
+  }
+}
+
+async function importBsTasks(bsId, all) {
+  const selected = [];
+  if (!all) {
+    document.querySelectorAll('.bs-check:checked').forEach(el => {
+      selected.push({ epicIdx: +el.dataset.ei, taskIdx: +el.dataset.ti });
+    });
+    if (!selected.length) return;
+  }
+
+  const body = all ? {} : { selected };
+  const res = await fetch(`${API}/api/brainstorms/${bsId}/import`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  activeBrainstorm.status = 'imported';
+  activeBrainstorm.importedTaskIds = data.ids;
+  renderBsChat();
+  showToast(`Imported ${data.imported} tasks to backlog`);
+}
+
+async function loadBsState() {
+  try {
+    const brainstorms = await (await fetch(`${API}/api/brainstorms`)).json();
+    document.getElementById('count-brainstorms').textContent = brainstorms.length;
   } catch {}
 }
 
